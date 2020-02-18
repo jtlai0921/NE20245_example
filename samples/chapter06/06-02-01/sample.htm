@@ -1,0 +1,74 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript" src = "../../lib/jslb_ajax.js" charset = "utf-8"></script>
+        
+<!-- DragableFloat DIV -->
+<script type="text/javascript" src="./jsgt_dragfloat07.js" charset = "utf-8"></script>
+        
+<script type="text/javascript">
+<!--
+
+////
+// 設定
+//
+// @syntax oj = dragableFloat("DIV的ID名",初始位置X,初始位置Y)
+//
+// @sample  div1 = dragableFloat("aaa",100,200) //建立
+// @sample  div1.innerHTML="床前明月光"         //插入HTML
+// @sample  div1.style.backgroundColor='orange' //以CSS修飾
+// @sample  doDragableFloat()                   //開始
+//	
+
+  //開始
+  setDragableFloat() 
+
+  //設定可拖曳漂浮之DIV
+  function setDragableFloat()
+  {
+    //建立可拖曳漂浮之DIV
+    div1 = dragableFloat("output",0,60)
+    
+    //對DIV插入HTML
+    div1.innerHTML="讀入這裡"
+
+    //以CSS修飾
+    div1.style.backgroundColor ="orange"
+    div1.style.padding ="8px"
+ 
+    //開始
+    doDragableFloat()
+  }
+
+  //回呼函式 ( 收訊時執行 )
+  function on_loaded1(oj)
+  {
+    //取得回應
+    var res  =  decodeURIComponent(oj.responseText)
+    //將回應的字串輸出到DIV
+    document.getElementById("output").innerHTML=res
+  }
+
+  //收發訊函式
+  function loadHtm(url)
+  {
+    sendRequest(on_loaded1,'', 'POST',url,true,true) 
+  }
+
+  
+//-->
+</script>
+
+<body>
+
+<input type    = "button" 
+       onclick = "loadHtm('./test1.htm');"
+       value   = "test1.htm">
+<input type    = "button" 
+       onclick = "loadHtm('./test2.htm');"
+       value   = "test2.htm">
+
+<br><br><br><br><br><br><br><br><br>
+請試著拖曳或捲動。
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+</body>

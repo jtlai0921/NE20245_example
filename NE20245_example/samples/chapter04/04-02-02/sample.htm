@@ -1,0 +1,28 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+        
+<script type="text/javascript">
+<!--
+
+  //回呼函式 (收到訊息時會被呼叫)
+  function on_loaded1(oj)
+  {
+    //取得回應並解碼
+    var res  = decodeURIComponent(oj.responseText)
+    
+    //以對話方塊顯示回應的字串
+    alert(res)
+  }
+
+//-->
+</script>
+
+<form>
+  <input type    = "button"
+         value   = "對Perl送出「己庚辛壬癸」並接受回應"
+         onclick = "sendRequest(on_loaded1,'&data=己庚辛壬癸','GET','./echo.cgi',true,true)">
+</form>

@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <head><title>Ajax</title>
+    <style type="text/css">
+    v\:* {
+      behavior:url(#default#VML);
+    }
+    </style>
+    <!-- 下面的 API Key 請務必改成自己從 http://www.google.com/apis/maps/ 取得的值 -->
+    <script src="http://maps.google.com/maps?file=api&v=1&key=ABQ****(請換成自己的API Key)****DMdcg" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="map" style="width: 500px; height: 400px"></div>
+    <script type="text/javascript">
+    //<![CDATA[
+
+    var map = new GMap(document.getElementById("map"));
+    map.centerAndZoom(new GPoint(139.77006196975708,35.62752958559642), 1);
+
+    // 建立基底圖示
+    var baseIcon = new GIcon();
+    baseIcon.shadow = "./shadow2.png";
+    baseIcon.iconSize = new GSize(24, 30);
+    baseIcon.iconAnchor = new GPoint(12,37);
+    baseIcon.shadowSize = new GSize(37, 37);
+    baseIcon.infoWindowAnchor = new GPoint(12, 15);
+    baseIcon.infoShadowAnchor  = new GPoint(37, 25);
+    iconName = ['a','b','c','d','e','f','g','h'];
+    
+    // 建立圖示與並加上點擊事件處理
+    function createIcon(point, index) {
+      var msg    = "您點選了 " + iconName[index].toUpperCase() + " 駐標。";
+      var icon   = new GIcon(baseIcon);
+      icon.image = "./"+ iconName[index] +".png";
+      var marker = new GMarker(point, icon);
+      var html = "<div style='width:250px'><b>" + msg + "</b></div>";
+      GEvent.addListener(marker, "click", function() {
+        marker.openInfoWindowHtml(html);
+      });
+     return marker;
+    }
+
+    // 在地圖上亂數顯示 iconName 之數量個圖示
+    var bounds = map.getBoundsLatLng();
+    var width = bounds.maxX - bounds.minX;
+    var height = bounds.maxY - bounds.minY;
+    for (var i = 0; i < iconName.length ; i++) {
+      var point = new GPoint(bounds.minX + width * Math.random(),
+                             bounds.minY + height * Math.random());
+      var marker = createIcon(point, i);
+      map.addOverlay(marker);
+    }
+	
+    //]]>
+    </script>
+
+<br />
+<br />#補充 2005.12.21: 沒有指定寬度的話，Firefox與Safari的資訊視窗會太窄。似乎加上&lt;div style="width:250px">就能解決。<br />例 marker.openInfoWindowHtml("&lt;div style='width:250px'>....&lt;/div>");
+</body>
+</html>
+

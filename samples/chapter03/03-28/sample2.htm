@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <head><title>Ajax</title>
+    <!-- 下面的 API Key 請務必改成自己從 http://www.google.com/apis/maps/ 取得的值 -->
+    <script src="http://maps.google.com/maps?file=api&v=1&key=ABQ****(請換成自己的API Key)****DMdcg" type="text/javascript"></script>
+  </head>
+  <body>
+
+    <!-- 地圖用 -->
+    <div id="map" style="width: 500px; height: 400px"></div>
+    
+    <script type="text/javascript">
+    //<![CDATA[
+   
+    var map0  = new GMap(document.getElementById("map"));
+    map0.centerAndZoom(new GPoint(139.74541783332825, 35.65870845033576), 4); 
+
+    // 新增駐標
+    var point  = new GPoint(139.74541783332825, 35.65870845033576);       
+    var marker = new GMarker(point);
+    map0.addOverlay(marker);
+    GEvent.addListener(marker, "click", function() {
+        // 以資訊視窗顯示詳細地圖
+        map0.showMapBlowup(point,0,G_MAP_TYPE);
+    });
+    
+    //]]>
+    </script>
+點選駐標會以資訊視窗顯示細節
+  </body>
+</html>

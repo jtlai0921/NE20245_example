@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+  <lists>
+    <item>
+      <name>上野動物園</name>
+      <info>動物園</info>
+      <lon>139.775</lon>
+      <lat>35.713</lat>
+    </item >
+    <item>
+      <name>上野車站</name>
+      <info>鐵道</info>
+      <lon>139.780</lon>
+      <lat>35.711</lat>
+    </item >
+</lists> 

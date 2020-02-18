@@ -1,0 +1,50 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+<script type="text/javascript">
+<!--
+
+  //回呼函式 (收到訊息時會被呼叫)
+  function on_loaded1(oj)
+  {
+    //取得回應
+    var res  =  decodeURIComponent(oj.responseText)
+    //將收到的回應輸出到DIV
+    document.getElementById("menuA").innerHTML=res
+  }
+
+  //收發訊函式
+  var x,y
+  function loadMenu(num,margin)
+  {
+    sendRequest(
+        on_loaded1,         //回呼函式
+        '', 'POST',         //資料 與 HTTP方式
+        './menu'+num+'.htm', //URL
+         true,true          //非同步 強制載入
+    ) 
+    //移動選單的位置
+    document.getElementById("menuA").style.marginLeft=margin +"px"
+  }
+
+
+//-->
+</script>
+
+<body>
+
+
+| <a href="javascript:void()"
+   onmouseover = "loadMenu(1,0)">讀入Menu1</a> | 
+<a href="javascript:void()"
+   onmouseover = "loadMenu(2,90)">讀入Menu2</a> | 
+
+<!-- 輸出在此 -->
+<div id="menuA" class="menu"></div>
+
+
+</body>

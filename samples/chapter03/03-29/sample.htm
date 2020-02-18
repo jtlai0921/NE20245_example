@@ -1,0 +1,78 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <!-- 下面的 API Key 請務必改成自己從 http://www.google.com/apis/maps/ 取得的值 -->
+    <script src="http://maps.google.com/maps?file=api&v=1&key=ABQ****(請換成自己的API Key)****DMdcg" type="text/javascript"></script>
+ </head>
+  <body>
+    <input type="button" onclick="loadXMLS(onloadXSL,'test1.xsl');"
+           value="滑鼠點選以顯示資料與駐標" />
+
+    <div id="map" style="width: 200px; height:200px;"></div>
+    <div id="htmlContainer"
+         style="position:absolute;left:220px;top:40px;">資料會顯示在此</div>
+   
+ <script type="text/javascript">
+    //<![CDATA[
+    // 配合2005.12.1 GoogleMaps改採世界座標系(wgs84)的修改
+    // 2005.12.1之後還想沿用2005.11.30之前的日本座標系資料時
+    // 在使用前請將GPoint類別覆寫如下。
+    // 要改用世界座標系(wgs84)則不要這一段
+    // ※譯注: 這是兩個座標系概略的換算公式 離島誤差很大
+    // http://jsgt.org/mt/archives/01/000646.html
+    //
+    GPoint = function (a,b){
+        this.y = b - b * 0.00010695  + a * 0.000017464 + 0.0046017;
+        this.x = a - b * 0.000046038 - a * 0.000083043 + 0.010040;
+    }
+    
+    
+    var map = new GMap(document.getElementById("map"));
+    var point = new GPoint(139.777, 35.712);
+        map.centerAndZoom(point, 2);
+
+    // 讀取
+    function loadXMLS(collback,xmlURL){
+      var request = GXmlHttp.create();
+      request.open("GET", xmlURL, true);
+      request.onreadystatechange = function() {
+        if (request.readyState == 4) {
+           collback(request);
+        }
+      }
+      request.send(null);
+    }
+
+    // 讀入XSLT時的回呼函式
+    var xsl
+    function onloadXSL(oj){
+      xsl = GXslt.create(oj.responseXML);
+      // 讀入XML
+      loadXMLS(onloadXML,'test1.xml');
+    }
+
+    // 讀入XML時的回呼函式
+    function onloadXML(oj){
+      xsl.transformToHtml(oj.responseXML, 
+                     document.getElementById('htmlContainer')) 
+      xmldoc = oj.responseXML
+      doc    = xmldoc.documentElement
+      len = doc.getElementsByTagName('item').length
+      for(i = 0; i < len;i++){
+      lon=doc.getElementsByTagName('lon')[i].firstChild.nodeValue
+      lat=doc.getElementsByTagName('lat')[i].firstChild.nodeValue
+      var marker = new GMarker(new GPoint(lon,lat));
+      map.addOverlay(marker);
+      }
+    }
+      
+    //]]>
+    </script>
+
+  </body>
+
+</html>
+

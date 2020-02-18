@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <head><title>for Ajax</title>
+    <!-- 下面的 API Key 請務必改成自己從 http://www.google.com/apis/maps/ 取得的值 -->
+    <script src="http://maps.google.com/maps?file=api&v=1&key=ABQ****(請換成自己的API Key)****DMdcg" type="text/javascript"></script>
+  </head>
+  <body>
+
+    <!-- 地圖用DIV -->
+    <div id="map1" style="width: 300px; height: 200px"></div>
+    <!-- 衛星照片用DIV -->
+    <div id="map2" style="width: 300px; height: 200px"></div>
+    
+    <script type="text/javascript">
+    //<![CDATA[
+
+    // 設定初始座標
+    var inipoint = new GPoint(139.76383924484253, 35.63635436886596);
+    GMap.prototype.mymap = { movedByOther : false };
+
+    // 地圖
+    var map1 = new GMap(document.getElementById("map1"));
+    map1.centerAndZoom(inipoint , 3);
+    map1.addControl(new GSmallMapControl());
+
+    // 衛星照片
+    var map2 = new GMap(document.getElementById("map2"));
+	map2.setMapType(_SATELLITE_TYPE) ;
+    map2.centerAndZoom(inipoint, 3);
+
+    // 建立十字圖示
+    var icon = new GIcon();
+    icon.image = "./cross.png";
+    icon.iconSize = new GSize(100, 100);
+    icon.iconAnchor = new GPoint(50, 50);
+
+    var marker1 = new GMarker(map1.getCenterLatLng(), icon);
+    var marker2 = new GMarker(map2.getCenterLatLng(), icon);
+    map1.addOverlay(marker1);
+    map2.addOverlay(marker2);
+    
+    // 將map1的zoom與衛星照片連動
+    GEvent.addListener(map1, "zoom", function() { 
+       map2.centerAndZoom(map1.getCenterLatLng(),map1.getZoomLevel());
+    });
+
+    // 將map1的move與衛星照片連動
+    GEvent.addListener(map1, "move", function() { 
+       if(map2.mymap.movedByOther)return //避免無限迴圈
+       map2.mymap.movedByOther = true
+       map2.centerAndZoom(map1.getCenterLatLng(),map2.getZoomLevel());
+       map1.clearOverlays()
+       map2.clearOverlays()
+       marker1 = new GMarker(map1.getCenterLatLng(), icon);
+       marker2 = new GMarker(map1.getCenterLatLng(), icon);
+       map1.addOverlay(marker1);
+       map2.addOverlay(marker2);
+       map2.mymap.movedByOther = false
+    });
+
+    // 將衛星照片的move與map1連動
+    GEvent.addListener(map2, "move", function() { 
+       if(map1.mymap.movedByOther)return //避免無限迴圈
+       map1.mymap.movedByOther = true
+       map1.centerAndZoom(map2.getCenterLatLng(),map1.getZoomLevel());
+       map1.clearOverlays()
+       map2.clearOverlays()
+       marker1 = new GMarker(map2.getCenterLatLng(), icon);
+       marker2 = new GMarker(map2.getCenterLatLng(), icon);
+       map1.addOverlay(marker1);
+       map2.addOverlay(marker2);
+       map1.mymap.movedByOther = false
+    });
+    
+		
+    //]]>
+    </script>
+  </body>
+</html>

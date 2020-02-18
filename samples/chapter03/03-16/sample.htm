@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <head><title>Ajax</title>
+    <!-- 下面的 API Key 請務必改成自己從 http://www.google.com/apis/maps/ 取得的值 -->
+    <script src="http://maps.google.com/maps?file=api&v=1&key=ABQ****(請換成自己的API Key)****DMdcg" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="map" style="width: 500px; height: 400px"></div>
+    <script type="text/javascript">
+    //<![CDATA[
+    
+    
+    // 設定東京鐵塔座標
+    var lon   = 139.74541783332825 ; //鐵塔的經度
+    var lat   = 35.65870845033576  ; //鐵塔的緯度
+    var tokyotwer = new GPoint(lon,lat);
+
+    // 頁面讀取結束後開始處理
+    window.onload = function() {
+      
+      var map = new GMap(document.getElementById("map"));
+      map.addControl(new GLargeMapControl());
+      map.centerAndZoom(tokyotwer, 1);
+      
+      // 處理點選事件
+      GEvent.addListener(map, 'click', function(overlay, point) {
+        if (overlay) {
+          // 若疊合圖層存在，刪除之
+          map.removeOverlay(overlay);
+        } else if (point) {
+          // 新增疊合圖層
+          map.addOverlay(new GMarker(point));
+        }
+      });
+
+    }
+
+    //]]>
+    </script>
+在地圖上點選，可切換駐標的顯示
+  </body>
+</html>

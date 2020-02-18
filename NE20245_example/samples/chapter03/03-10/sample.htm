@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <head><title>Ajax</title>
+    <style type="text/css">
+    v\:* {
+      behavior:url(#default#VML);
+    }
+    </style>
+    <!-- 下面的 API Key 請務必改成自己從 http://www.google.com/apis/maps/ 取得的值 -->
+    <script src="http://maps.google.com/maps?file=api&v=1&key=ABQ****(請換成自己的API Key)****DMdcg" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="map" style="width: 500px; height: 400px"></div>
+    <script type="text/javascript">
+    //<![CDATA[
+
+    var map = new GMap(document.getElementById("map"));
+    map.centerAndZoom(
+       new GPoint(139.7599983215332, 35.62667495998369), 3);
+
+    var points = [];
+    points.push(new GPoint(139.73931312561035, 35.628907432142576));//品川
+    points.push(new GPoint(139.7527027130127, 35.63734840394896))  ;//芝浦
+    points.push(new GPoint(139.77149963378906, 35.626535428403905));//台場
+
+    map.addOverlay(new GPolyline(points,'#000000',5,0.7));
+
+	
+    //]]>
+    </script>
+  </body>
+</html>

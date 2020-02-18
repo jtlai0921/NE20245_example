@@ -1,0 +1,107 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>XML</title>
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+<script type="text/javascript">
+<!--
+
+  //回呼函式 (收到訊息時會被呼叫)
+  function on_loadedXML(oj)
+  {
+    //以responseXML取得回應
+    var res  =  oj.responseXML
+    
+    //改寫OPTION用物件
+    resOj = new chgXMLtoHTMLOptions(res,document.test1.s0)
+    
+    resOj.addOptions()
+  }
+
+  //收發訊函式
+  function loadFile(url)
+  {
+    sendRequest(on_loadedXML,'','POST',url,true,true) 
+  }
+  
+  
+  //以讀入的XML資料來改寫OPTION
+  function chgXMLtoHTMLOptions(xdoc,oj){
+  
+    return {
+    
+      //將XML的items,value,text以聯想陣列(雜湊)傳回
+      setItems : function (){
+     
+        //在XML內建立名為"items"之標籤(元素)的陣列
+        var items = xdoc.getElementsByTagName("items")
+  
+        //在XML內建立名為"value"之標籤(元素)的陣列
+        var value = xdoc.getElementsByTagName("value")
+      
+        //在XML內建立名為"text"之標籤(元素)的陣列
+        var text = xdoc.getElementsByTagName("text")
+        return { 'items':items ,'values':value , 'texts':text };
+      
+      },
+  
+      //以XML的資料產生選項
+      addOptions : function (){
+        //刪除所有選項
+        this.delAllOptions(oj)
+        //接收XML資料的物件
+        var data = this.setItems()
+        //依"item"標籤出現的順序處理
+        for( i = 0 ; i < data.items.length ; i++ ){
+          var text  = data.texts[i].firstChild.nodeValue 
+          var value = data.values[i].firstChild.nodeValue 
+          oj.options[oj.length]=new Option(text,value)
+        }
+      },
+  
+      //刪除index所指定的選項
+      delOptionByIndex : function (index){
+        oj.options[index]=null
+      },
+    
+      //刪除所有選項
+      delAllOptions : function (oj){
+        var optionIndex = oj.options.length  
+        for ( i=0 ; i <= optionIndex ; i++ ){
+          oj.options[0]=null
+        }
+      },
+      
+      //option被選取時的處置
+      onselectedOption : function(oj){
+        alert("您選取了" + oj.options[oj.selectedIndex].text)
+      }
+      
+    }
+    
+  }
+
+  
+//-->
+</script>
+
+<form name="test1">
+<input type="button" 
+       value="動物園列表"
+       onclick="loadFile('zoo.xml')">
+<input type="button" 
+       value="車站列表"
+       onclick="loadFile('station.xml')"><br>
+<select name="s0" size="5"
+        onchange="resOj.onselectedOption(this)"> 
+  <option selected> --顯示在此--
+</select> 
+</form>
+
+</body>
+
+</html>
+

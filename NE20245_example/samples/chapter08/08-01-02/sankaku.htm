@@ -1,0 +1,17 @@
+<!-- DrawingCanvas.js 0.02 C³ BSD ŽöžÜ
+     nanto_vi (TOYAMA Nao), 2005-10-06
+     http://nanto.asablo.jp/blog/2005/09/27/89628 -->
+
+<script src="./DrawingCanvas.js" type=text/javascript></script>
+<body>
+<div id="canvasParent"></div>
+<script>
+var canvas = new DrawingCanvas(
+      document.getElementById('canvasParent'), 120, 120);
+canvas.startLine(10, 10);
+canvas.lineTo(100, 100);
+canvas.lineTo(100, 10);
+canvas.lineTo(10, 10);
+canvas.endLine();
+</script>
+</body>

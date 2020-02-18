@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <head><title>查詢經緯度（地圖建立作業補助工具）</title>
+    <!-- 下面的 API Key 請務必改成自己從 http://www.google.com/apis/maps/ 取得的值 -->
+    <script src="http://maps.google.com/maps?file=api&v=1&key=ABQ****(請換成自己的API Key)****DMdcg" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="map" style="width: 500px; height: 400px"></div>
+    <script type="text/javascript">
+    //<![CDATA[
+    
+    var map = new GMap(document.getElementById("map"));
+    map.centerAndZoom(new GPoint(139.765449,35.633477), 10);
+    map.addControl(new GLargeMapControl());
+    map.addControl(new GMapTypeControl());
+
+    // 建立十字圖示
+    var icon = new GIcon();
+    icon.image = "./cross.png";
+    icon.iconSize = new GSize(100, 100);
+    icon.iconAnchor = new GPoint(50, 50);
+    var marker = new GMarker(map.getCenterLatLng(), icon);
+    map.addOverlay(marker);
+   
+    // 移動地圖時固定十字圖示，並顯示座標
+    GEvent.addListener(map, "move", function() { 
+       map.clearOverlays()
+       marker = new GMarker(map.getCenterLatLng(), icon);
+       map.addOverlay(marker);
+       
+       // 顯示十字圖示處的座標
+       document.getElementById('datalatlon').innerHTML=map.getCenterLatLng() 
+    });
+
+
+    //]]>
+    </script>
+    
+    <div id="datalatlon" style="font-size:1.2em;">---</div>
+
+    <br />[ <a href='http://jsgt.org/mt/01/'>作者日記</a> ] [ <a href='http://jsgt.org/ajax/'>入門Ajax</a>  ] [ <a href='http://jsgt.org/ajax/newmon/GoogleMapsAPI.htm'>Google Maps API 技術資料</a>  ]
+
+  </body>
+</html>

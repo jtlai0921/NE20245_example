@@ -1,0 +1,112 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+
+<!-- 程式庫  jsgt_dragfloat.js-->
+<script type    = 'text/javascript'
+        charset = 'UTF-8'
+        src     = 'jsgt_dragfloat07.js'></script>
+
+
+<script type="text/javascript">
+<!--
+
+  //回呼函式 ( 收訊時執行 )
+  function on_loaded1(oj)
+  {
+    //取得回應
+    var res  =  decodeURIComponent(oj.responseText)
+
+    //將回應的字串輸出到DIV
+    document.getElementById("loaded").innerHTML=res
+  }
+
+  //收發訊函式
+  function loadFile(num)
+  {
+    sendRequest(
+        on_loaded1,         //回呼函式
+        '', 'POST',         //資料與 HTTP 方式
+        './d'+num+'.htm',   //URL
+         true,true          //非同步 強制載入
+    ) 
+  }
+
+
+////
+// 運作開始
+//
+// 頁面載入時開始運作
+//
+window.onload = function ()
+{
+    setDragableFloat() //設定
+}
+
+////
+// 設定
+//
+// @syntax oj = dragableFloat("DIV的ID名",初始位置X,初始位置Y)
+//
+// @sample  div1 = dragableFloat("aaa",100,200) //建立
+// @sample  div1.innerHTML="床前明月光"         //插入HTML
+// @sample  div1.style.backgroundColor='orange' //以CSS修飾
+// @sample  doDragableFloat()                   //開始
+//    
+function setDragableFloat()
+{
+    //設定可拖曳漂浮之DIV
+    div1 = dragableFloat("aaa",100,80)
+    //設定為不漂浮
+    div1.floatEnabled =false
+    //設定滑動範圍(minX, minY, maxX, maxY)
+    div1.setBounds(100, 80, 300, 80)
+    //設定滑動桿圖案
+    div1.innerHTML="<img src='minbar.gif'>"
+
+    //開始
+    doDragableFloat()
+
+    //在划動桿上放開滑鼠按鍵時發生的事件
+    div1.onmouseup =   function(event){
+
+      //取得現在X位置
+      nowDiv1X = parseInt(div1.getMouseX(event))
+      
+      //滑動桿的left位置
+      var offX = 110
+      
+      //以滑動桿現在的位置決定數值
+      var num
+      if(  nowDiv1X <= (50+offX)) num = 50 ;
+      else if(nowDiv1X > (50+offX) && nowDiv1X <= (100+offX)) num = 100 ;
+      else if(nowDiv1X > (100+offX) && nowDiv1X <= (150+offX)) num = 150 ;
+      else if(nowDiv1X > (150+offX) ) num = 200 ;
+      
+      //偵測確認用
+      //window.status = nowDiv1X +"--"+num
+      
+      //以Ajax讀入檔案
+      loadFile(num)
+    }
+}
+
+//-->
+</script>
+
+<!--  滑動桿的棒子 -->
+<div style="position:absolute;left:110px;top:80px;">
+<img src='bar.gif' style="width:200px;height:20px">
+</div>
+
+<!-- 讀入資料在此 -->
+<div id="loaded"
+      style="position:absolute;
+             left:110px;top:120px;font-size:18px"></div>
+
+</body>

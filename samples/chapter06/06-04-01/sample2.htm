@@ -1,0 +1,216 @@
+
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+<script type="text/javascript" src="./jsgt_dragfloat07.js"></script>
+
+<script type="text/javascript">
+<!--
+
+  //選取BOX的初始值
+  selPOS1 ={ id:'selected1',top:150,left:50,height:120,width:180 }
+  selPOS2 ={ id:'selected2',top:150,left:240,height:120,width:180 }
+  selPOS3 ={ id:'selected3',top:280,left:50,height:300,width:370 }
+
+  //頁面載入後啟動函式startDrags
+  window.onload=startDrags
+  
+  //頁面載入後馬上執行的函式
+  function startDrags(){
+  
+    //建立選取BOX的實體
+    selArea1 = new mkSelectArea(selPOS1,'【讀取】')
+    selArea2 = new mkSelectArea(selPOS2,'【不讀取】')
+    selArea3 = new mkSelectArea(selPOS3,'【輸出】')
+  
+    //建立項目
+    item1 = new mkItem('item1',50,60,'1: <b>項目1</b>')
+    item2 = new mkItem('item2',50,80,'2: <b>項目2</b>')
+    item3 = new mkItem('item3',50,100,'3: <b>項目3</b>')
+    item4 = new mkItem('item4',50,120,'4: <b>項目4</b>')
+    item5 = new mkItem('item5',180,60,'5: <b>項目5</b>')
+    item6 = new mkItem('item6',180,80,'6: <b>項目6</b>')
+    
+    //選擇次數
+    selcount = 0
+  }
+
+  //設定選取BOX
+  function mkSelectArea(selPOS,html){
+    //設定選取BOX
+    var div = document.createElement('DIV')
+    this.div = canvas.appendChild(div)
+    this.div.id = selPOS.id 
+    this.div.innerHTML=html
+    this.div.style.top = selPOS.top + "px"
+    this.div.style.left = selPOS.left + "px"
+    this.div.style.height = selPOS.height + "px"
+    this.div.style.width = selPOS.width + "px"
+    this.div.style.border ="dotted 3px #777777"
+    this.div.style.position ="absolute"
+    return this.div
+  }
+  
+  
+  //用來建立項目的建構子
+  function mkItem(id,left,top,html){
+    this.item = dragableFloat(id,left,top)
+    this.item.innerHTML=html
+    this.item.iniLeft = left
+    this.item.iniTop  = top
+    this.item.onmouseup   = function (e){
+      //滑鼠釋放時判定位置
+      hanntei( this ,selPOS1,selPOS2,this.getLEFT(id),this.getTOP(id) )
+    }
+    return this.item
+  }
+
+  //判定
+  function hanntei(oj,selPOS1,selPOS2,x,y){
+    if(
+        ( x > selPOS2.left )&&
+        ( x < selPOS2.left+selPOS2.width )&&
+        ( y > selPOS2.top)&&
+        ( y < selPOS2.top+selPOS2.height)
+      ){
+        idou(oj,selArea2)
+    } else if(
+        ( x > selPOS1.left )&&
+        ( x < selPOS1.left+selPOS1.width )&&
+        ( y > selPOS1.top)&&
+        ( y < selPOS1.top+selPOS1.height)
+      ){
+        idou(oj,selArea1)
+    }
+  }
+  
+  //移動項目
+  function idou(oj,selArea){
+    selArea.innerHTML+="<br>" + oj.innerHTML
+    num = oj.innerHTML.split(':')[0]
+    //若落在讀取區域則以Ajax讀入
+    if(selArea.id=='selected1')loadFile(num)
+    oj.innerHTML = ''
+    selcount++
+  }
+  
+  //重設
+  function resetSel(){
+    selArea1.innerHTML='【讀取】'
+    selArea2.innerHTML='【不讀取】'
+    selArea3.innerHTML='【輸出】'
+    item1.innerHTML='1: <b>項目1</b>'
+    item2.innerHTML='2: <b>項目2</b>'
+    item3.innerHTML='3: <b>項目3</b>'
+    item4.innerHTML='4: <b>項目4</b>'
+    item5.innerHTML='5: <b>項目5</b>'
+    item6.innerHTML='6: <b>項目6</b>'
+    item1.style.left = item1.iniLeft
+    item1.style.top  = item1.iniTop
+    item2.style.left = item2.iniLeft
+    item2.style.top  = item2.iniTop
+    item3.style.left = item3.iniLeft
+    item3.style.top  = item3.iniTop
+    item4.style.left = item4.iniLeft
+    item4.style.top  = item4.iniTop
+    item5.style.left = item5.iniLeft
+    item5.style.top  = item5.iniTop
+    item6.style.left = item6.iniLeft
+    item6.style.top  = item6.iniTop
+    selcount = 0
+  }
+
+  //回呼函式 ( 收訊時執行 )
+  function on_loaded1(oj)
+  {
+    //取得回應
+    var res  =  decodeURIComponent(oj.responseText)
+    //淡入
+    fadeOpacity(selArea3.id,1,0.9)
+    //將回應的字串顯示到DIV
+    selArea3.innerHTML+="<br>"+res
+  }
+
+  //送訊用函式
+  function loadFile(num)
+  {
+    sendRequest(
+        on_loaded1,         //回呼函式
+        '', 'POST',         //資料 與 HTTP方式
+        './data'+num+'.htm', //URL
+         true,true          //非同步 強制載入
+    ) 
+  }
+
+//// 淡化特效
+
+  // 跨瀏覽器不透明度設定函式
+  function setOpacity(layName,arg) {
+    var ua = navigator.userAgent,oj = document.getElementById(layName)
+    if(window.opera){//o9bpr2+
+       if((typeof oj.style.opacity)=='string') oj.style.opacity = arg
+       else return
+    } else if(ua.indexOf('Safari') !=-1 || ua.indexOf('KHTML') !=-1 || 
+       (typeof oj.style.opacity)=='string') { //s,k,new m
+        oj.style.opacity = arg
+    } else if(document.all) {          //win-e4,win-e5,win-e6
+        document.all(layName).style.filter="alpha(opacity=0)"
+        document.all(layName).filters.alpha.Opacity  = (arg * 100)
+    } else if(ua.indexOf('Gecko')!=-1) //n6,n7,m1
+        oj.style.MozOpacity = arg
+  }
+  
+  // 跨瀏覽器淡出淡入函式
+  function fadeOpacity(layName,swt,stopOpacity){
+    
+    if(!window.fadeOpacity[layName]) //初始化計數器
+      fadeOpacity[layName] =0 
+    //沒有指定方式時採用的初始值(從不透明到透明)
+    if(!arguments[1]) swt = -1
+    //引數swt為 -1 表示不透明到透明
+    //           1 表示透明到不透明
+    if(swt==-1)        var f  = "9876543210"
+    else if(swt==1)    var f  = "0123456789"
+    else               var f  = "9876543210"
+    //沒有指定不透明度時採用的初期値
+    if(!arguments[2] && swt==-1)     stopOpacity = 0
+    else if(!arguments[2] && swt==1) stopOpacity = 10
+
+    //淡化效果
+    if( fadeOpacity[layName] < f.length-1 ){
+      //從字串取出計數器值所指向的字元
+      var opa = f.charAt(fadeOpacity[layName])/10
+      //若達到目標不透明度則程式結束
+      if( opa == stopOpacity ){
+        setOpacity(layName,stopOpacity)  //結束
+        fadeOpacity[layName] = 0         //清除
+        return
+      }
+      // 修改不透明度
+      setOpacity(layName,opa)
+      // 累計計數器
+      fadeOpacity[layName]++
+      // 在50/1000秒後再次執行fadeOpacity
+      setTimeout('fadeOpacity("'+layName+'","'+swt+'","'+stopOpacity+'")',50)
+    } else {
+      // 結束
+      setOpacity(layName,stopOpacity)
+      // 清除
+      fadeOpacity[layName] = 0
+    }
+  }
+  
+//-->
+</script>
+
+請將項目拖曳到其中一邊的BOX裡。
+<input type="button" value="重設" onclick="resetSel()">
+
+</body>
+</html>

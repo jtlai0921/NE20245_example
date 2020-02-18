@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+  <lists>
+    <items>
+      <text>企鵝</text>
+      <value>企鵝館</value>
+    </items>
+    <items>
+      <text>北極熊</text>
+      <value>北極熊館</value>
+    </items>
+    <items>
+      <text>海豹</text>
+      <value>海豹館</value>
+    </items>
+</lists> 

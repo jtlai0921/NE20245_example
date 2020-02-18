@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+  <lists>
+    <items>
+      <text>大熊貓</text>
+      <value>東園</value>
+    </items>
+    <items>
+      <text>亞洲象</text>
+      <value>東園</value>
+    </items>
+    <items>
+      <text>蘇門達臘虎</text>
+      <value>東園</value>
+    </items>
+    <items>
+      <text>土豚(食蟻獸)</text>
+      <value>西園</value>
+    </items>
+  </lists> 

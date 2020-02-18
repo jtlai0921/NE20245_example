@@ -1,0 +1,29 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+<script type="text/javascript">
+<!--
+
+  //回呼函式 (收到訊息時會被呼叫)
+  function on_loaded1(oj)
+  {
+    //取得回應並以eval直接JavaScript化
+    eval("var res = "+oj.responseText)
+
+    //顯示回應之JSON的test1屬性
+    alert(res.test1) 
+  }
+
+//-->
+</script>
+
+<form>
+  <input type    = "button"
+         value   = "讀入test.data並顯示JSON的屬性"
+         onclick = "sendRequest(on_loaded1,'','GET','./test.dat',true,true)">
+</form>
+

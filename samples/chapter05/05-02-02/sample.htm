@@ -1,0 +1,47 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+<script type="text/javascript">
+<!--
+
+  //回呼函式 (收到訊息時會被呼叫)
+  function on_loaded1(oj)
+  {
+    //取得回應
+    var res  =  decodeURIComponent(oj.responseText)
+    //為了安全，只將字串特定部分HTML
+    res = res.split('&lt;input type="text" name="ok" value=""&gt;')
+    res = res.join('<input type="text" name="ok" value="">')
+    //將收到的回應輸出到DIV
+    document.getElementById("output1").innerHTML=res
+  }
+
+  //收發訊函式
+  function getMsg(oj)
+  {
+    if(oj.value=='yes')
+      sendRequest(
+        on_loaded1,         //回呼函式
+        '', 'POST',         //資料 與 HTTP方式
+        './msg.php',        //URL
+         true,true          //非同步 強制載入
+      ) 
+  }
+//-->
+</script>
+
+<body>
+只有YES勾選時才進行處理
+<form name="test1" onsubmit="return false">
+  <input type="radio" name="yesno" value="yes" onclick="getMsg(this)"> YES
+  <input type="radio" name="yesno" value="no" checked> NO
+
+  <!-- 輸出在此 -->
+  <div id="output1"></div>
+</form>
+
+</body>

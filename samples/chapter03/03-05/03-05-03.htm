@@ -1,0 +1,70 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript">
+<!--
+
+var t = new transUnit()
+
+function transUnit(){
+
+  this.A2B = A2B
+  this.B2A = B2A
+
+  // 從度分秒轉小數
+  function dominsec2per(dosu,min,sec){
+    return parseFloat(dosu) + (parseFloat(min)/60) + (parseFloat(sec)/3600)
+  }
+  
+  function A2B(oj){
+    var dosu = oj.form.dosu.value
+    var min  = oj.form.min.value 
+    var sec  = oj.form.sec.value 
+    var d = dominsec2per(dosu,min,sec)
+    oj.form.per.value = d
+  }
+  
+  // 從小數轉度分秒
+  function per2dominsec(data){
+    var data  = Math.round(data * 360000)    ;
+    var dosu  = Math.floor(data / 360000)    ;
+    var min   = Math.floor(data / 6000) % 60  ;
+    var sec   = Math.floor(data / 100) % 60 ;
+    var amari = data%100                     ;
+    return [ dosu,min,sec,amari ]
+  }
+  
+  function B2A(oj){
+    var data = oj.form.per.value
+    var d = per2dominsec(data)
+    oj.form.dosu.value = d[0]
+    oj.form.min.value = d[1]
+    oj.form.sec.value = d[2]+'.'+d[3]
+  }
+
+}
+
+//-->
+</script>
+
+</head>
+<body>
+
+經緯度單位轉換
+<form>
+<table border="1">
+  <tr>
+    <td>A : 度分秒表示法</td><td><input type="button" value=" A to B " onclick="t.A2B(this)"></td><td><input type="text" name="dosu" value="139">度</td><td><input type="text" name="min" value="44">分</td><td><input type="text" name="sec" value="43.50">秒</td>
+  </tr>
+  <tr>
+    <td>B : 小數表示法</td><td><input type="button" value=" B to A " onclick="t.B2A(this)"></td><td colspan="3"><input type="text" name="per" value=""></td>
+  </tr>
+  <tr>
+    <td colspan="5"><input type="reset"></td> 
+  </tr>
+</table>
+
+</form>
+  
+    <br />[ <a href='http://jsgt.org/mt/01/'>作者日記</a> ] [ <a href='http://jsgt.org/ajax/'>入門Ajax</a>  ] [ <a href='http://jsgt.org/ajax/newmon/GoogleMapsAPI.htm'>Google Maps API 類別規格文件</a>  ]
+  </body>
+</html>

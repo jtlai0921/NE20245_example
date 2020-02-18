@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <head><title>Ajax</title>
+    <!-- 下面的 API Key 請務必改成自己從 http://www.google.com/apis/maps/ 取得的值 -->
+    <script src="http://maps.google.com/maps?file=api&v=1&key=ABQ****(請換成自己的API Key)****DMdcg" type="text/javascript"></script>
+    <!-- Ajax簡易程式庫 jslb_ajax.js -->
+    <script type="text/javascript" src = "./jslb_ajax.js"
+            charset  = "utf-8"></script>
+  </head>
+  <body>
+  
+    <!-- SELECT標籤用 -->
+    <div id="sel"></div>
+    <!-- 地圖用 -->
+    <div id="map" style="width: 500px; height: 400px"></div>
+    
+    <script type="text/javascript">
+    //<![CDATA[
+    // 配合2005.12.1 GoogleMaps改採世界座標系(wgs84)的修改
+    // 2005.12.1之後還想沿用2005.11.30之前的日本座標系資料時
+    // 在使用前請將GPoint類別覆寫如下。
+    // 要改用世界座標系(wgs84)則不要這一段
+    // ※譯注: 這是兩個座標系概略的換算公式 離島誤差很大
+    // http://jsgt.org/mt/archives/01/000646.html
+    //
+    GPoint = function (a,b){
+        this.y = b - b * 0.00010695  + a * 0.000017464 + 0.0046017;
+        this.x = a - b * 0.000046038 - a * 0.000083043 + 0.010040;
+    }
+    
+
+
+    var map = new GMap(document.getElementById("map"));
+    map.centerAndZoom(new GPoint(139.69487,35.68627), 1);
+    map.addControl(new GLargeMapControl());
+    
+
+    // 顯示駐標
+    function createMarker(point,oj) {
+      var marker = new GMarker(point);
+      map.addOverlay(marker);
+      var ken = oj.options[oj.selectedIndex].text
+      GEvent.addListener(marker, "click", function() {
+        marker.openInfoWindowHtml("這是"+ken+"政府");
+      });
+    }
+
+    // 選擇時的處理
+    function handleSelected(oj) { 
+      if (oj.selectedIndex != 0) { 
+        point = oj.options[oj.selectedIndex].value
+        point = point.split(',')
+        map.recenterOrPanToLatLng(new GPoint(point[0],point[1]), 0); 
+        createMarker(new GPoint(point[0],point[1]),oj)
+      } 
+    } 
+
+    // 產生SELECT標籤
+    // 以Ajax程式庫取得都道府縣政府座標資料
+    //
+    sendRequest(on_loaded1,'','POST','./ken.csv',true,true)
+  
+    // 回呼函式 ( 收訊時執行 )
+    function on_loaded1(oj)
+    {
+      // 取得回應並解碼
+      var text = decodeURIComponent(oj.responseText)
+      
+      // 以換行符號改行切割並建立陣列
+      var kens = text.split('\r').join('').split('\n')
+      
+      // 建立SELECT標籤
+      htm = '<select name="id" onChange="handleSelected(this)">\n';
+      htm +=  '<option value="0"selected>請選擇都道府縣--顯示都道府縣政府所在地</option> \n';
+  
+      // 逐行處理
+      for (var i = 0; i < kens.length; i++) {
+      
+        // 處理以(,)隔開的資料
+        // (CSV裡依序存放了縣名,經度,緯度)
+        rows = kens[i].split(',')
+        
+        // 將資料寫入OPTION的屬性裡
+        htm += '  <option value="'+rows[1]+','+rows[2]+'">'+rows[0]+'</option>\n' ;
+        
+      }
+      htm += '</select> ';
+      
+      // 輸出SELECT標籤
+      document.getElementById('sel').innerHTML=htm
+    }
+  
+  
+    //]]>
+    </script>
+  </body>
+</html>

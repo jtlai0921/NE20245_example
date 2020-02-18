@@ -1,0 +1,137 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript" src = "../../lib/jslb_ajax.js" charset = "utf-8"></script>
+        
+<!-- DragableFloat DIV -->
+<script type="text/javascript" src="./jsgt_dragfloat07.js" charset = "utf-8"></script>
+        
+<script type="text/javascript">
+<!--
+
+////
+// 設定
+//
+// @syntax oj = dragableFloat("DIV的ID名",初始位置X,初始位置Y)
+//
+// @sample  div1 = dragableFloat("aaa",100,200) //建立
+// @sample  div1.innerHTML="床前明月光"         //插入HTML
+// @sample  div1.style.backgroundColor='orange' //以CSS修飾
+// @sample  doDragableFloat()                   //開始
+//	
+
+  //開始
+  setDragableFloat() 
+
+  //設定可拖曳漂浮之DIV
+  function setDragableFloat()
+  {
+    //建立可拖曳漂浮之DIV
+    div1 = dragableFloat("output",160,48)
+    
+    //對DIV插入HTML
+    div1.innerHTML="讀入這裡"
+
+    //以CSS修飾
+    div1.style.backgroundColor ="#ff99ff"
+    div1.style.padding ="8px"
+ 
+    //開始
+    doDragableFloat()
+  }
+
+  //回呼函式 ( 收訊時執行 )
+  function on_loaded1(oj)
+  {
+    //取得回應
+    var res  =  decodeURIComponent(oj.responseText)
+    //淡入
+    fadeOpacity('output',1,0.7)
+    //將回應的字串輸出到DIV
+    document.getElementById("output").innerHTML=res
+  }
+
+  //收發訊函式
+  function loadHtm(url)
+  {
+    sendRequest(on_loaded1,'', 'POST',url,true,true) 
+  }
+
+
+  // 跨瀏覽器不透明度設定函式
+  function setOpacity(layName,arg) {
+    var ua = navigator.userAgent,oj = document.getElementById(layName)
+    if(window.opera){//o9bpr2+
+       if((typeof oj.style.opacity)=='string') oj.style.opacity = arg
+       else return
+    } else if(ua.indexOf('Safari') !=-1 || ua.indexOf('KHTML') !=-1 || 
+       (typeof oj.style.opacity)=='string') { //s,k,new m
+        oj.style.opacity = arg
+    } else if(document.all) {          //win-e4,win-e5,win-e6
+        document.all(layName).style.filter="alpha(opacity=0)"
+        document.all(layName).filters.alpha.Opacity  = (arg * 100)
+    } else if(ua.indexOf('Gecko')!=-1) //n6,n7,m1
+        oj.style.MozOpacity = arg
+  }
+  
+  // 跨瀏覽器淡出淡入函式
+  function fadeOpacity(layName,swt,stopOpacity){
+    
+    if(!window.fadeOpacity[layName]) //初始化計數器
+      fadeOpacity[layName] =0 
+    //沒有指定方式時採用的初始值(從不透明到透明)
+    if(!arguments[1]) swt = -1
+    //引數swt為 -1 表示不透明到透明
+    //           1 表示透明到不透明
+    if(swt==-1)        var f  = "9876543210"
+    else if(swt==1)    var f  = "0123456789"
+    else               var f  = "9876543210"
+    //沒有指定不透明度時採用的初期値
+    if(!arguments[2] && swt==-1)     stopOpacity = 0
+    else if(!arguments[2] && swt==1) stopOpacity = 10
+
+    //淡化效果
+    if( fadeOpacity[layName] < f.length-1 ){
+      //從字串取出計數器值所指向的字元
+      var opa = f.charAt(fadeOpacity[layName])/10
+      //若達到目標不透明度則程式結束
+      if( opa == stopOpacity ){
+        setOpacity(layName,stopOpacity)  //結束
+        fadeOpacity[layName] = 0         //清除
+        return
+      }
+      // 修改不透明度
+      setOpacity(layName,opa)
+      // 累計計數器
+      fadeOpacity[layName]++
+      // 在50/1000秒後再次執行fadeOpacity
+      setTimeout('fadeOpacity("'+layName+'","'+swt+'","'+stopOpacity+'")',50)
+    } else {
+      // 結束
+      setOpacity(layName,stopOpacity)
+      // 清除
+      fadeOpacity[layName] = 0
+    }
+  }
+  
+  
+//-->
+</script>
+
+<body>
+<style type="text/css">
+<!--
+body { /* 頁面整體 */
+  background-image:url(atukan.jpg);
+  background-repeat:no-repeat;
+  background-position: 0px 24px;
+}
+-->
+</style>
+<input type    = "button" 
+       onclick = "loadHtm('./hello.htm');"
+       value   = "load hello.htm">
+
+<br><br><br><br><br><br><br><br><br>請試著拖曳粉紅色的DIV或捲動
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+</body>

@@ -1,0 +1,32 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+<script type="text/javascript">
+<!--
+
+  //回呼函式 (收到訊息時會被呼叫)
+  function on_loaded1(oj)
+  {
+    //取得回應
+    var res  = oj.responseText
+    
+    //以對話方塊顯示回應的字串
+    alert(res)
+  }
+
+//-->
+</script>
+
+<form>
+  <input type    = "button"
+         value   = "讀入test.txt並以對話方塊顯示"
+         onclick = "sendRequest(on_loaded1,'','GET',
+                   'https://your-path/04-05-01/test.txt',
+                   true,true)">
+</form>
+
+這個頁面不是 http:// ，請用 https://...讀取。

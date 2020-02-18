@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+  <lists>
+    <items>
+      <text>上野動物園</text>
+      <value>ueno</value>
+    </items>
+    <items>
+      <text>旭山動物園</text>
+      <value>asahiyama</value>
+    </items>
+  </lists> 

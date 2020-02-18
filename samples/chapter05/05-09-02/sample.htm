@@ -1,0 +1,144 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>XML</title>
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+<script type="text/javascript">
+<!--
+
+  var resOj = null
+
+  
+
+  //SELECT s1用 回呼函式1
+  function on_loadedXML1(oj){
+    //以responseXML取得回應
+    var res  =  oj.responseXML
+    //OPTION改寫用物件
+    resOj = new chgXMLtoHTMLOptions(res,document.test1.s1)
+    resOj.addOptions()
+    
+  }
+  
+  //SELECT s2用 回呼函式2 
+  function on_loadedXML2(oj){
+    //以responseXML取得回應
+    var res  =  oj.responseXML
+    //OPTION改寫用物件
+    resOj = new chgXMLtoHTMLOptions(res,document.test1.s2)
+    resOj.addOptions()
+  }
+
+  //收發訊函式
+  function loadFile(on_loadedXML,url){
+    sendRequest(on_loadedXML,'','POST',url,true,true) 
+  }
+
+  
+  //以讀入的XML資料來改寫OPTION
+  function chgXMLtoHTMLOptions(xdoc,oj){
+  
+    return {
+    
+      //將XML的items,value,text以聯想陣列(雜湊)傳回
+      setItems : function (){
+     
+        //在XML內建立名為"items"之標籤(元素)的陣列
+        var items = xdoc.getElementsByTagName("items")
+  
+        //在XML內建立名為"value"之標籤(元素)的陣列
+        var value = xdoc.getElementsByTagName("value")
+      
+        //在XML內建立名為"text"之標籤(元素)的陣列
+        var text = xdoc.getElementsByTagName("text")
+        
+        return { 'items':items,'values':value ,'texts':text };
+      
+      },
+  
+      //以XML的資料產生選項
+      addOptions : function (){
+        //刪除所有選項
+        this.delAllOptions(oj)
+        //接收XML資料的物件
+        var data = this.setItems()
+        //依"item"標籤出現的順序處理
+        for( i = 0 ; i < data.items.length ; i++ ){
+          var text  = data.texts[i].firstChild.nodeValue 
+          var value = data.values[i].firstChild.nodeValue 
+          oj.options[oj.length]=new Option(text,value)
+        }
+      },
+  
+      //刪除index所指定以外之所有選項
+      delOptionsWithoutIndex : function (oj,index){
+        var optionIndex = oj.options.length  
+        for ( i=optionIndex ; i >= 0  ; i-- ){
+          if(index!=i)oj.options[i]=null
+        }
+      },
+    
+      //刪除所有選項
+      delAllOptions : function (oj){
+        var optionIndex = oj.options.length  
+        for ( i=0 ; i <= optionIndex ; i++ ){
+          oj.options[0]=null
+        }
+      },
+      
+      //SELECT s1的option被選取時的處置
+      onselectedOption : function(oj){
+         this.delOptionsWithoutIndex(oj,oj.selectedIndex)
+        //從讀入的XML檔名取得option的值
+        var xmlFileName = oj.options[oj.selectedIndex].value
+        //第2個SELECT用
+        loadFile(on_loadedXML2,xmlFileName+'.xml')
+      },
+      
+      //SELECT s2的option被選取時的處置
+      onselectedOption2 : function(oj){
+      
+        //取得訊息用的值
+        var s1    = document.test1.s1
+        var zoo   = s1.options[s1.selectedIndex].text
+        var text  = oj.options[oj.selectedIndex].text
+        var value = oj.options[oj.selectedIndex].value
+        var msg   = "<br>"+zoo+"的"+text+"在<b>"+value+"</b>裡。"
+        document.getElementById('msg').innerHTML = msg
+      }
+      
+    }
+    
+  }
+
+  
+//-->
+</script>
+
+<form name="test1">
+<input type="button" 
+       value="動物園列表"
+       onclick="loadFile(on_loadedXML1,'zoo.xml')"><br>
+<nobr>
+<select name="s1" size="5"
+        onchange="if(resOj)resOj.onselectedOption(this)"> 
+  <option selected> --取得動物園列表--
+</select> 
+<select name="s2" size="5"
+        onchange="if(resOj)resOj.onselectedOption2(this)"> 
+  <option selected> --取得資料--
+</select>
+</nobr>
+
+<!-- 訊息用DIV -->
+<div id="msg"></div>
+
+</form>
+
+</body>
+
+</html>
+

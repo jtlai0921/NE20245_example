@@ -1,0 +1,4 @@
+AuthUserFile /var/www/jsgt.org/p/.htpasswd
+AuthName "Please enter your ID(ajax) and password(test)"
+AuthType Basic
+require valid-user

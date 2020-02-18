@@ -1,0 +1,122 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<style type="text/css">
+<!--
+body {
+  background-image:url(hituji.jpg);
+  background-repeat:no-repeat;
+  background-position : 0px 20px;
+}
+#menu0{
+  position        : absolute;
+  left            : 0px ;
+  top             : 0px ;
+  width           : 100%;
+  height          : 18px;
+  padding         : 4px;
+  background-color: #2f4f4f;
+}
+#menu0 a{
+  font-size       : 14px  ;
+  text-decoration : none;
+  color           : #ffffff;
+}
+
+.menu  {
+  position        : absolute;
+  margin          : 0px;
+  padding         : 0px;
+  height          : 1.5em;
+  border-top      : 1px solid #eeeeee;
+}
+.menu a {
+  background-color: #dddddd;
+  width          : 180px;
+  display        : block;
+  padding-top    : 4px ;
+  padding-left   : 8px ;
+  padding-bottom : 4px ;
+  border-top     : 1px solid #eeeeee;
+  border-right   : 1px solid #666666;
+  border-left    : 1px solid #dddddd;
+  border-bottom  : 1px solid #333333;
+  text-decoration: none;
+  color: #2f4f4f;
+}
+.menu a:hover {
+  background-color: #2f4f4f;
+  border-bottom: 1px solid #000000;
+  color: #ffffff;
+}
+
+-->
+</style>
+
+
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+<script type="text/javascript">
+<!--
+
+  // 回呼函式 ( 收訊時執行 )
+  function on_loaded1(oj)
+  {
+    // 取得回應
+    var res  =  decodeURIComponent(oj.responseText)
+    // 將不透明度設定為0.7
+    setOpacity("menuA",0.7)
+    // 將回應的字串輸出到DIV
+    document.getElementById("menuA").innerHTML=res
+  }
+
+  // 收發訊函式
+  function loadMenu(num,margin)
+  {
+    sendRequest(
+        on_loaded1,         // 回呼函式
+        '', 'POST',         // 資料與 HTTP 方式
+        './menu'+num+'.htm', // URL
+         true,true          // 非同步 強制載入
+    ) 
+    // 移動選單位置
+    document.getElementById("menuA").style.top="20px"
+    document.getElementById("menuA").style.left=margin +"px"
+  }
+
+  // 跨瀏覽器不透明度設定函式
+  function setOpacity(layName,arg) {
+    var ua = navigator.userAgent,oj = document.getElementById(layName)
+    if(window.opera){//o9bpr2+
+       if((typeof oj.style.opacity)=='string') oj.style.opacity = arg
+       else return
+    } else if(ua.indexOf('Safari') !=-1 || ua.indexOf('KHTML') !=-1 || 
+       (typeof oj.style.opacity)=='string') { //s,k,new m
+        oj.style.opacity = arg
+    } else if(document.all) {          //win-e4,win-e5,win-e6
+        document.all(layName).style.filter="alpha(opacity=0)"
+        document.all(layName).filters.alpha.Opacity  = (arg * 100)
+    } else if(ua.indexOf('Gecko')!=-1) //n6,n7,m1
+        oj.style.MozOpacity = arg
+  }
+
+//-->
+</script>
+
+<body>
+
+<div id="menu0">
+| <a href="javascript:void()"
+   onmouseover = "loadMenu(1,0)">讀入Menu1</a> | 
+<a href="javascript:void()"
+   onmouseover = "loadMenu(2,80)">讀入Menu2</a> | 
+</div>
+
+<!-- 輸出於此 -->
+<div id="menuA" class="menu"></div>
+
+
+</body>

@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <head><title>Ajax</title>
+    <!-- 下面的 API Key 請務必改成自己從 http://www.google.com/apis/maps/ 取得的值 -->
+    <script src="http://maps.google.com/maps?file=api&v=1&key=ABQ****(請換成自己的API Key)****DMdcg" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="map" style="width: 500px; height: 400px"></div>
+    <script type="text/javascript">
+    //<![CDATA[
+   
+    // 預先載入圖片
+    img = new Image();
+    img.src = './daibutu01.gif';
+    
+    // 要在視窗裡顯示的HTML
+    var html = '<div style="width:300px"><img src="'+img.src+'" align="left"/>'
+             + '<b>【牛久大佛/淨土庭園】</b><br />'
+             + '參拜於2005.8.15<br />'
+             + '是超高層巨大佛。'
+             + '在台灣鑄造的喔！</div>'
+    
+    var map = new GMap(document.getElementById("map"));
+    map.addControl(new GSmallMapControl());
+    map.centerAndZoom(new GPoint(140.22112369537353, 35.98090599267152), 1);
+    
+    //  設定牛久大佛淨土庭園的座標
+    var lon   = 140.22112369537353 ; //庭園的經度
+    var lat   =  35.98090599267152 ; //庭園的緯度
+    var teien = new GPoint(lon,lat);
+    
+    // 建立駐標
+    createMarker(teien)
+
+    // 顯示駐標
+    function createMarker(point) {
+      var marker = new GMarker(point);
+      map.addOverlay(marker);
+      GEvent.addListener(marker, "click", function() {
+        marker.openInfoWindowHtml(html);
+      });
+    }
+	
+    //]]>
+    </script>
+點選駐標，會顯示資訊視窗
+
+<br />
+<br />#補充 2005.12.21: 沒有指定寬度的話，Firefox與Safari的資訊視窗會太窄。似乎加上&lt;div style="width:100px">就能解決。<br />例 marker.openInfoWindowHtml("&lt;div style='width:300px'>....&lt;/div>");
+  </body>
+</html>

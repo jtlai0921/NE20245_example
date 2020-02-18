@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <head><title>Ajax</title>
+    <style type="text/css">
+    v\:* {
+      behavior:url(#default#VML);
+    }
+    </style>
+    <!-- 下面的 API Key 請務必改成自己從 http://www.google.com/apis/maps/ 取得的值 -->
+    <script src="http://maps.google.com/maps?file=api&v=1&key=ABQ****(請換成自己的API Key)****DMdcg" type="text/javascript"></script>
+  </head>
+  <body>
+  
+    <input type="button" value="函館/渡島" onclick="goToIArea(0)">
+    <input type="button" value="江差/桧山" onclick="goToIArea(1)">
+    <input type="button" value="小樽/後志" onclick="goToIArea(2)">
+    <input type="button" value="苫小牧/室蘭" onclick="goToIArea(3)">
+    <input type="button" value="岩見沢/空知" onclick="goToIArea(4)">
+    <!input type="button" value="浦河/日高" onclick="goToIArea(5)">
+    
+    <div id="map" style="width: 500px; height: 400px"></div>
+    <script type="text/javascript">
+    //<![CDATA[
+
+    // 配合2005.12.1 GoogleMaps改採世界座標系(wgs84)的修改
+    // 2005.12.1之後還想沿用2005.11.30之前的日本座標系資料時
+    // 在使用前請將GPoint類別覆寫如下。
+    // 要改用世界座標系(wgs84)則不要這一段
+    // ※譯注: 這是兩個座標系概略的換算公式 離島誤差很大
+    // http://jsgt.org/mt/archives/01/000646.html
+    //
+    GPoint = function (a,b){
+        this.y = b - b * 0.00010695  + a * 0.000017464 + 0.0046017;
+        this.x = a - b * 0.000046038 - a * 0.000083043 + 0.010040;
+    }
+    
+    
+    var map = new GMap(document.getElementById("map"));
+    map.addControl(new GLargeMapControl());
+
+    // 節錄自i-Area資料
+    iarea = [
+      [001,00,'函館/渡島',501553125,148856250,508387500,153450000],
+      [001,01,'江差/桧山',501806250,149700000,505575000,153450000],
+      [002,01,'小樽/後志',503325000,153150000,508500000,156159375,38],
+      [002,02,'苫小牧/室蘭',506025000,152240625,512325000,154650000],
+      [002,03,'岩見沢/空知',509400000,154200000,512550000,160050000],
+      [002,04,'浦河/日高',510960937,150900000,516178125,154800000]
+    ]
+    
+    // 移動到選取的i-Area
+    function goToIArea(num){
+      // 設定i-Area區域
+      bounds = new GBounds(iarea[num][3]/3600000, //西端經度
+                           iarea[num][4]/3600000, //南端緯度
+                           iarea[num][5]/3600000, //東端經度
+                           iarea[num][6]/3600000  //北端緯度
+                           )
+      // 中心經緯度
+      var centerX = bounds.minX+(bounds.maxX - bounds.minX)/2;
+      var centerY = bounds.minY+(bounds.maxY - bounds.minY)/2;
+      // 移動到i-Area
+      map.centerAndZoom(new GPoint(centerX,centerY), 5);    
+      // 修正比例尺
+      reZoom(bounds)
+    }
+    
+    // 畫折線
+    var pln
+    function wrtPlyline(bounds){
+        //map.clearOverlays() 
+        map.removeOverlay(pln);
+        // 建立端點陣列
+        var points = [];
+        points.push(new GPoint(bounds.minX, bounds.maxY));//左上
+        points.push(new GPoint(bounds.maxX, bounds.maxY));//右上
+        points.push(new GPoint(bounds.maxX, bounds.minY));//右下
+        points.push(new GPoint(bounds.minX, bounds.minY));//左下
+        points.push(new GPoint(bounds.minX, bounds.maxY));//左上
+        pln = new GPolyline(points,'#000000',5,0.7)
+        // 畫線
+        map.addOverlay(pln);
+    }
+    
+    
+    // 修正比例尺
+    function reZoom(bounds){
+      var nowBnd = map.getBoundsLatLng()
+      if( 
+        nowBnd.minX < bounds.minX &&
+        nowBnd.minY < bounds.minY &&
+        nowBnd.maxX > bounds.maxX &&
+        nowBnd.maxY > bounds.maxY
+      ){
+      
+        // 若i-Area區域在現在地圖區域內就直接畫線
+        wrtPlyline(bounds)
+    
+      } else {
+      
+         // 若i-Area區域在現在地圖區域外則修改比例尺
+         zm = map.getZoomLevel();
+         map.zoomTo(++zm) 
+         reZoom(bounds)
+      }
+    }
+    	
+    //]]>
+    </script>
+  </body>
+</html>

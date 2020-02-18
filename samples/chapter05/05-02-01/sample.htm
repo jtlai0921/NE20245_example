@@ -1,0 +1,45 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+<script type="text/javascript">
+<!--
+
+  //回呼函式 (收到訊息時會被呼叫)
+  function on_loaded1(oj)
+  {
+    //取得回應
+    var res  =  decodeURIComponent(oj.responseText)
+    
+    //將收到的回應輸出到FORM
+    document.forms["test1"].elements["output1"].value=res
+  }
+
+  //收發訊函式
+  function getMsg(oj)
+  {
+      sendRequest(
+        on_loaded1,         //回呼函式
+        '&data='+oj.value,  //資料 
+        'GET',              // HTTP方式
+        './msg.php',        //URL
+         true,              //非同步
+        true                //強制載入
+      ) 
+  }
+  
+//-->
+</script>
+
+<body>
+<form name="test1">
+  <input type="radio" name="min" value="1"  onclick="getMsg(this)" checked> 1分鐘　
+  <input type="radio" name="min" value="5"  onclick="getMsg(this)"> 5分鐘　
+  <input type="radio" name="min" value="10" onclick="getMsg(this)"> 10分鐘　
+  <br>輸出:<input type="text" name="output1" size="40">
+</form>
+
+</body>

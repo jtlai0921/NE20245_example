@@ -1,0 +1,91 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript">
+<!--
+  var startTime = new Date()
+//-->
+</script>
+
+<!-- Ajax簡易程式庫 jslb_ajax.js 
+     Toshiro Takahasi 
+     http://jsgt.org/mt/archives/01/000409.html-->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+        
+<body>
+<!-- 圖表輸出於此 -->
+<div id="canvasParent" style="position:absolute:top:20px;left:20px;"></div>
+
+<!-- DrawingCanvas.js  0.02 修正 BSD 授權
+     nanto_vi (TOYAMA Nao), 2005-10-06
+     http://nanto.asablo.jp/blog/2005/09/27/89628#c102681-->
+<script src="./DrawingCanvas.js" charset="utf-8" type=text/javascript></script>
+<script src="./DynamicCanvas.js" charset="utf-8" type=text/javascript></script>
+
+<script type="text/javascript">
+<!--
+
+  //以Ajax請求資料
+  sendRequest(on_loaded1,'','GET','./cnt.dat',true,true)
+
+  //回呼函式 ( 收訊時執行 )
+  function on_loaded1(oj)
+  {
+    //取得回應
+    var res  = oj.responseText;
+    var rows = res.split('\n');
+    
+    //畫出折線
+    var x    = 0;
+    var lines = new DrawingCanvas(
+     document.getElementById('canvasParent')
+     , 500, 200);
+     
+    lines.container.setAttribute('style','position:absolute;top:10px;left:10px');
+    lines.setBgColor("#eee");
+    lines.setLineColor("#f00");
+    lines.setLineWidth(1);
+    lines.startLine(x, rows[0].split(',')[3] );
+    for (var i = 1; i < rows.length; i++) {
+      lines.lineTo( x , rows[i].split(',')[3]/3);
+      x += 20;
+    }
+    lines.endLine();
+    
+    //畫出縱軸
+    var x    = 0;
+    lines.setLineColor("#888");
+    lines.setLineWidth(1);
+
+    for (var i = 1; i < rows.length; i++) {
+      lines.startLine(x,0);
+      lines.lineTo( x , 200);
+      lines.endLine();
+      x += 20;
+    }
+
+    //畫出橫軸
+    var y    = 0;
+    for (var i = 1; i < 200; i++) {
+      lines.startLine(0,y);
+      lines.lineTo(500, y);
+      lines.endLine();
+      y += 50;
+    }
+
+  }
+
+//-->
+</script>
+
+
+<script type="text/javascript">
+<!--
+  var endTime = new Date()
+  
+  sa = endTime.getTime() - startTime.getTime()
+  document.write("<div style='position:absolute;top:220px;left:10px'>頁面載入到繪圖完成花了"+sa/1000+"秒<br><br>*以Ajax讀取9月份的<a href='./cnt.dat'>./cnt.dat</a>並以JavaScript畫出圖表</div> ")
+//-->
+</script>
+
+</body>

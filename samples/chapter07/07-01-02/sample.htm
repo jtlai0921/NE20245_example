@@ -1,0 +1,94 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>XML</title>
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+<script type="text/javascript">
+<!--
+
+  //回呼函式 ( 收訊時執行 )
+  function on_loadedXML(oj)
+  {
+    //以responseXML取得回應
+    var res  =  oj.responseXML
+    //將XML轉換成HTML
+    resHTML = chgXMLtoHTMLTable(res)
+    //將回應的字串輸出到DIV
+    document.getElementById("loaded").innerHTML=resHTML
+  }
+
+  //送訊用函式
+  function loadFile(url)
+  {
+    sendRequest(on_loadedXML,'','POST',url,true,true) 
+  }
+  
+  //將讀入的XML資料轉換成XML並顯示
+  function chgXMLtoHTMLTable(xdoc)
+  {
+  
+  
+    //建立XML內名為"item"之標籤(元素)的陣列
+    var item = xdoc.getElementsByTagName("item")
+
+    //建立XML內名為"name"之標籤(元素)的陣列
+    var name = xdoc.getElementsByTagName("name")
+  
+    //建立XML內名為"info"之標籤(元素)的陣列
+    var info = xdoc.getElementsByTagName("info")
+  
+    //建立XML內名為"lon"之標籤(元素)的陣列
+    var lon  = xdoc.getElementsByTagName("lon")
+    
+    //建立XML內名為"lat"之標籤(元素)的陣列
+    var lat  = xdoc.getElementsByTagName("lat")
+  
+    //建立table標籤
+    html = '<table border="1">'
+    html += '<tr>'
+    html += '<th>名稱</th><th>種類</th><th>經度</th><th>緯度</th>'
+    html += '</tr>'
+    
+    //依照"item"標籤出現的順序處理
+    for( i = 0 ; i < item.length ; i++ )
+    {
+        //取出每個元素的firstChild資料
+        html += '<tr>'
+        html += '  <td>'
+        html += '<b>' + name[i].firstChild.nodeValue + '</b>' 
+        html += '  </td>'
+        html += '  <td>'
+        html += info[i].firstChild.nodeValue 
+        html += '  </td>'
+        html += '  <td>'
+        html += lon[i].firstChild.nodeValue 
+        html += '  </td>'
+        html += '  <td>'
+        html += lat[i].firstChild.nodeValue 
+        html += '  </td>'
+        html += '</tr>'
+    }
+    
+    html += '</table>'
+    return html
+  }
+
+  
+//-->
+</script>
+
+<input type="button" value="讀入XML並以表格顯示"
+       onclick="loadFile('test1.xml')">
+
+<!-- 讀入之資料輸出用 -->
+<div id="loaded"
+      style="position:absolute;
+             left:10px;top:50px;font-size:18px"></div>
+
+</body>
+
+</html>
+

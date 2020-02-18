@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <head><title>Ajax</title>
+    <!-- 下面的 API Key 請務必改成自己從 http://www.google.com/apis/maps/ 取得的值 -->
+    <script src="http://maps.google.com/maps?file=api&v=1&key=ABQ****(請換成自己的API Key)****DMdcg" type="text/javascript"></script>
+  </head>
+  <body>
+  
+    <div id="map1" style="width: 180px; height: 120px"></div>
+    <div id="map2" style="width: 400px; height: 300px"></div>
+    
+    <script type="text/javascript">
+    //<![CDATA[
+
+
+    // 設定初始座標
+    var inipoint = new GPoint(139.76098537445068, 35.63783669735612);
+    
+    // 判斷是否正被另一個地圖牽動的旗標
+    GMap.prototype.mymap = { movedByOther : false };
+
+    // 小的廣域地圖
+    var map1 = new GMap(document.getElementById("map1"));
+    map1.centerAndZoom(inipoint , 5);
+
+    // 大的詳細地圖
+    var map2 = new GMap(document.getElementById("map2"));
+    map2.centerAndZoom(inipoint, 1);
+    map2.addControl(new GSmallMapControl());
+    map2.addControl(new GMapTypeControl());
+
+    // 建立十字圖示
+    var icon = new GIcon();
+    icon.image = "./cross.png";
+    icon.iconSize = new GSize(100, 100);
+    icon.iconAnchor = new GPoint(50, 50);
+
+    // 繪製圖示
+    var marker1 = new GMarker(map1.getCenterLatLng(), icon);
+    var marker2 = new GMarker(map2.getCenterLatLng(), icon);
+    map1.addOverlay(marker1);
+    map2.addOverlay(marker2);
+    
+    
+    // 處理廣域地圖事件
+    GEvent.addListener(map2, "move", function() { 
+       if(map1.mymap.movedByOther)return
+       map1.mymap.movedByOther = true
+       map1.centerAndZoom(map2.getCenterLatLng(),5);
+       map1.clearOverlays()
+       map2.clearOverlays()
+       marker1 = new GMarker(map2.getCenterLatLng(), icon);
+       marker2 = new GMarker(map2.getCenterLatLng(), icon);
+       map1.addOverlay(marker1);
+       map2.addOverlay(marker2);
+       map1.mymap.movedByOther = false
+    });
+
+    // 處理詳細地圖事件
+    GEvent.addListener(map1, "move", function() { 
+       if(map2.mymap.movedByOther)return
+       map2.mymap.movedByOther = true
+       map2.centerAndZoom(map1.getCenterLatLng(),1);
+       map1.clearOverlays()
+       map2.clearOverlays()
+       marker1 = new GMarker(map1.getCenterLatLng(), icon);
+       marker2 = new GMarker(map1.getCenterLatLng(), icon);
+       map1.addOverlay(marker1);
+       map2.addOverlay(marker2);
+       map2.mymap.movedByOther = false
+    });
+
+	
+    //]]>
+    </script>
+  </body>
+</html>

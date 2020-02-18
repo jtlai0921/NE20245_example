@@ -1,0 +1,26 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript" src = "../../lib/jslb_ajax.js" charset = "utf-8"></script>
+<script type="text/javascript">
+<!--
+
+  //回呼函式 (收到訊息時會被呼叫)
+  function on_loaded1(oj)
+  {
+      //取得回應
+      var xmlDoc  = oj.responseXML
+      //取出testdata標籤到陣列
+      var nodes = xmlDoc.getElementsByTagName("testdata")
+      //顯示第一個testdata標籤的firstChild之值
+      alert(nodes[0].firstChild.nodeValue)
+  }
+  
+//-->
+</script>
+
+<form>
+  <input type    = "button"
+         value   = "讀取test.xml並以對話方塊顯示內容"
+         onclick = "sendRequest(on_loaded1,'','GET','./test.xml',true,true)">
+</form>

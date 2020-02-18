@@ -1,0 +1,44 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script languege = "JavaScript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+<script language = "JavaScript">
+<!--
+  //回呼函式 (收到訊息時會被呼叫)
+  function on_loaded1(oj)
+  { 
+    //取得回應
+    var res  =  decodeURIComponent(oj.responseText)
+    //將收到的回應輸出到DIV
+    document.getElementById("output1").innerHTML　=　res
+    counter++
+  }
+
+  var counter = 0 //防止無限迴圈的次數計數器
+  
+  function getMsg(){
+    if(counter>0)return
+      sendRequest(
+        on_loaded1,                             //回呼函式
+        '',                                     //資料
+        'GET',                                  //HTTP方式
+        './msg.php',                            //URL
+         true,                                  //非同步
+        true                                    //強制載入
+      )
+  }
+//-->
+</script>
+
+<form>
+  <input type       = "text" 
+            onfocus  = "getMsg(0)"
+            name      = "data">
+</form>
+
+<!-- 輸出在此 -->
+<div id="output1"></div>
+

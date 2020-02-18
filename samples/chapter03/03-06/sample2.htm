@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <head><title>Ajax</title>
+    <!-- 下面的 API Key 請務必改成自己從 http://www.google.com/apis/maps/ 取得的值 -->
+    <script src="http://maps.google.com/maps?file=api&v=1&key=ABQ****(請換成自己的API Key)****DMdcg" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="map" style="width: 500px; height: 400px"></div>
+    <script type="text/javascript">
+    //<![CDATA[
+    
+    var map = new GMap(document.getElementById("map"));
+    map.centerAndZoom(new GPoint(139.76085662841797, 35.63595326348946), 3);
+    
+    // 連續移動
+    window.onload = function(){
+      // 向著東京鐵塔開始移動
+      panLatLon(139.76085662841797, 35.63595326348946,100)
+      panLatLon(139.76008415222168, 35.64334723040353,200)
+      panLatLon(139.76154327392578, 35.650182553425296,300)
+      panLatLon(139.76154327392578, 35.65618041632016,400)
+      panLatLon(139.74763870239258, 35.65625015626292,500)
+      panLatLon(139.74541783332825, 35.65870845033576,600)
+    }
+    
+    // 平面移動用函式
+    function panLatLon(x,y,time){
+      window.setTimeout(function() {
+        map.recenterOrPanToLatLng(new GPoint(x,y) );
+      },time);
+    }
+    
+    //]]>
+    </script>
+    
+    讀取結束後開始向著東京鐵塔連續移動
+  </body>
+</html>

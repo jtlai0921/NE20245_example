@@ -1,0 +1,37 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+<script type="text/javascript">
+<!--
+
+  //回呼函式 (收到訊息時會被呼叫)
+  function on_loaded1(oj)
+  {
+    //取得回應並解碼
+    var res  = decodeURIComponent(oj.responseText)
+    
+    //將回應以\n分解，建立出以行為單位的陣列
+    var rows = res.split('\n')
+
+    //在表單裡顯示回應的索引1欄位(索引0是欄位名)
+    document.f1.outputdata.value = rows[1]
+  }
+
+//-->
+</script>
+
+<form name="f1">
+  <input type    = "button"
+         value   = "透過MySQL，以都道府縣編號取得縣名"
+         onclick = "sendRequest(on_loaded1,'&code=11','GET','./sh_mysql.php',true,true)">
+  <br><br>
+  搜尋結果 : No11 是 <input type    = "text"
+         name    = "outputdata"
+         size    = "30"
+         value   = "">
+</form>
+

@@ -1,0 +1,100 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>XML</title>
+
+
+<button onclick="rssOut5()">
+讀取外部部落格的RSS</button><br>
+
+<!-- 讀取JKL.ParseXML -->
+<script type="text/javascript" 
+        src="./jkl-parsexml.js"></script>
+
+<script>
+<!--
+
+  //進度桿
+  var bar
+  var cnt = 0
+  //資料
+  var data5 =""
+  
+  //輸出用DIV
+  document.write('<div id="out5" style ="font-size:0.8em;margin:12px;"></div>')
+  document.write('<div id="out6" style ="font-size:0.8em;margin:12px;"></div>')
+  
+  //預載
+  
+  rssPreLoader5('getrss.php') //<--PHP
+  
+  function rssPreLoader5(url)
+  {
+  
+    //開始進度桿的運作
+    document.getElementById('out5').innerHTML = 'pre loading...'
+    bar = setInterval('progressbar()', 100 )
+  
+    // 建立JKL.ParseXML物件
+    var xml = new JKL.ParseXML( url );  
+    var func = function ( data5 )        // 定義呼叫對象函式
+    {  
+      onloaded5( data5 );               // 回呼函式
+    }
+    xml.async( func );                  // 指定呼叫對象函式
+    xml.parse();                        // 下載～解析～呼叫函式
+  
+  }
+  
+  //收到RSS資料後所啟動的回呼函式
+  function onloaded5(xml)
+  {
+    data5 =""
+  
+    //依序處理feed元素以下的entry元素
+    for(i in xml.feed.entry)
+    {
+      //建立輸出用的HTML
+      data5 += '<a href="'+xml.feed.entry[i].link.href+'">'
+  
+      //限制長度為24個字
+      data5 += xml.feed.entry[i].title.substr(0,24)
+      data5 += '</a>'
+      data5 += '<br>'
+  
+      //取得時間
+      var time = xml.feed.entry[i].issued
+        time = time.split("T").join(" ").split("+")[0]
+      data5 += '('+time+')<br>'
+    }
+    //停止進度桿
+    clearInterval(bar)
+    document.getElementById('out5').innerHTML = 'ok now loaded.'
+  
+    return data5
+  }
+  
+  //輸出
+  function rssOut5()
+  {
+    //輸出
+    document.getElementById('out5').innerHTML = data5
+  }
+  
+  //進度桿
+  function progressbar()
+  {
+    document.getElementById('out5').innerHTML += '|'
+    document.getElementById('out6').innerHTML = cnt
+    if( cnt > 100 )
+    {
+      clearInterval(bar)
+      document.getElementById('out5').innerHTML += 'load 失敗'
+    }
+    cnt ++
+  }
+  
+  
+//-->
+</script>
+</body>
+</html>
+

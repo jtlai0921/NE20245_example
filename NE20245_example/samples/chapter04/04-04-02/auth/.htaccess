@@ -1,0 +1,4 @@
+AuthUserFile /yourpath/.htpasswd
+AuthName "Please enter your ID(ajax) and password(test)"
+AuthType Basic
+require valid-user

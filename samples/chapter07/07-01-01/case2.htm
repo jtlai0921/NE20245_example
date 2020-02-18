@@ -1,0 +1,37 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>XML</title>
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+<script type="text/javascript">
+<!--
+  //回呼函式 ( 收訊時執行 )
+  function on_loadedXML(oj){
+    //以responseXML取得回應
+    var res  =  oj.responseXML
+    //將回應的字串輸出到DIV
+    document.getElementById("loaded").innerHTML=res
+  }
+
+  //送訊用函式
+  function loadFile(url){
+    sendRequest(on_loadedXML,'','POST',url,true,true) 
+  }
+//-->
+</script>
+
+<input type="button" value="以esponseXML讀取"
+       onclick="loadFile('test1.xml')">
+
+<!-- 讀入之資料輸出用 -->
+<div id="loaded"
+      style="position:absolute;
+             left:10px;top:50px;font-size:18px"></div>
+
+</body>
+
+</html>
+

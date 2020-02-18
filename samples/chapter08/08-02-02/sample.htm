@@ -1,0 +1,76 @@
+<html lang="zh-tw">
+<head>
+<meta http-equiv=content-type content="text/html; charset=utf-8">
+<title>AjaSQLtest</title>
+<!-- 暫定Ajax程式庫 jslb_ajaxxxx.js -->
+<script type="text/javascript" 
+        charset = "utf-8"
+        src     = "./jslb_ajax038.js"></script>
+
+<!-- 暫定AjaSQL程式庫 ajasqlxxx.js -->
+<script type="text/javascript" 
+        charset = "utf-8"
+        src     = "./jslb_ajasql037.js"></script>
+
+<!-- 郵遞區號/地址搜尋程式庫 ajasql_zip2addr.js -->
+<script type="text/javascript" 
+        charset = "utf-8"
+        src     = "./ajasql_zip2addr001.js"></script>
+
+<script type="text/javascript">
+<!--
+
+	//初始設定
+	window.onload=function(){
+	
+		sqlite01.dbName = 'zipdb'              // DB名(SQLite則寫DB路徑)
+		sqlite01.tblName= 'zip'                // 資料表
+		sqlite01.url    = './ajasql_gw037.php' // AjaSQL閘道使用的URL
+		sqlite = new asql_Conf(sqlite01);      // 初始化
+
+		//進度桿(預設值是'o')
+		sqlite.progress.prog_bar = '|'
+		sqlite.progress.div.style.color = 'orange'
+
+		//地址候補DIV
+		selzip   = document.getElementById('selzipdiv')
+		//郵遞區號輸入欄位
+		zipfild  = document.zipform.zip
+		//地址輸入欄位
+		addrfild = document.zipform.address
+	}
+
+//-->
+</script>
+<!-- 地址候補DIV的CSS -->
+<style>
+<!--
+body {font-size: 15px;}
+#selzipdiv{ margin: 8px; font-size: 15px ; padding: 2px ;
+            border: 1px dotted #aaaaaa; width: 540px; }
+#selzipdiv a:link     { color: #333333; background: none;}
+#selzipdiv a:visited  { color: #333333; background: none;}
+#selzipdiv a:active   { color: #000099; background: none;}
+#selzipdiv a:hover    { color: orange; }
+#selzipdiv .des { font-style: italic; margin-left: 20px; color: #5555ff;}
+-->
+</style>
+<p><b>【輸入輔助】郵遞區號(前方相符)、地址(部分相符)的模糊搜尋 </b></p>
+<p>請「輸入郵遞區號」或「輸入地址的一部份 (如「館前路」）並按Enter」，<br>
+系統會從58000筆資料中找到郵遞區號與地址。</p>
+	<form name="zipform" onsubmit="return false">
+	郵遞區號: <input type = "text" name = "zip" size = "8" maxlength    = "6"
+	         autocomplete = "off"
+	         onkeyup      = "zip2addr(this.value)"
+	         style        = "background-color:#ffcc33;
+	                         ime-mode:disabled;" value = "">
+	地址: <input type = "text" name = "address" size = "50"
+	       autocomplete = "off"
+	       onkeypress   = "addr2zipaddr(event,this.value);" 
+	       style        = "background-color:#ffcc33"
+	       value        = "">
+	<!-- 地址候補顯示在此 -->
+	<div id="selzipdiv"></div>
+	</form>
+	<!-- 進度桿輸出在此 -->
+	<div id="progressBarId"></div>

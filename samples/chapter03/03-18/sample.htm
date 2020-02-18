@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <head><title>Ajax</title>
+    <style type="text/css">
+    v\:* {
+      behavior:url(#default#VML);
+    }
+    </style>
+    <!-- 下面的 API Key 請務必改成自己從 http://www.google.com/apis/maps/ 取得的值 -->
+    <script src="http://maps.google.com/maps?file=api&v=1&key=ABQ****(請換成自己的API Key)****DMdcg" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="map" style="width: 500px; height: 400px"></div>
+    <script type="text/javascript">
+    //<![CDATA[
+
+    var map = new GMap(document.getElementById("map"));
+    map.addControl(new GSmallMapControl());
+    map.addControl(new GMapTypeControl());
+    map.centerAndZoom(new GPoint(139.7658348, 35.633616348), 2);
+    
+    // 以XMLHttpRequest進行讀取
+    var request = GXmlHttp.create();
+    request.open("GET", "sample.xml", true);
+    // 回呼函式
+    request.onreadystatechange = function() {
+      if (request.readyState == 4) {
+        var res = request.responseXML;
+        var xmlDoc = res.documentElement
+        var markers = xmlDoc.getElementsByTagName("marker");
+        for (var i = 0; i < markers.length; i++) {
+          var lon = parseFloat(markers[i].getAttribute("lon"));
+          var lat = parseFloat(markers[i].getAttribute("lat"));
+          var point = new GPoint(lon,lat);
+          var marker = new GMarker(point);
+          map.addOverlay(marker);
+        }
+      }
+    }
+    //傳訊
+    request.send(null);
+
+    //]]>
+    </script>
+讀取XML格式的座標
+  </body>
+</html>

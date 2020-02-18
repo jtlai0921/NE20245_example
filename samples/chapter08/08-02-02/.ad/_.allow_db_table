@@ -1,0 +1,2 @@
+sqlite:../bbsdb/mydb_bbs.db:mydb1
+sqlite:../ajasql/zipdb:zi3p

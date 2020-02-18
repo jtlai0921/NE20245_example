@@ -1,0 +1,164 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<style type="text/css">
+<!--
+body { /* 頁面全體 */
+  background-image:url(daibutu2.jpg);
+  background-repeat:no-repeat;
+  background-position: 0px 20px;
+}
+#menu0{ /* 固定選單 */
+  position        : absolute;
+  left    : 0px   ;top    : 0px ;
+  width           : 100%;
+  height          : 18px;
+  padding         : 4px;
+  background-color: #2f4f4f;
+}
+#menu0 a{
+  font-size       : 14px  ;
+  text-decoration : none;
+  color           : #ffffff;
+}
+
+.menu  { /* 讀入之選單 */
+  position        : absolute;
+  margin          : 0px;
+  padding         : 0px;
+  height          : 1.5em;
+  border-top      : 1px solid #eeeeee;
+}
+.menu a {
+  background-color: #dddddd;
+  width           : 180px;
+  display         : block;
+  padding-top     : 4px ;
+  padding-left    : 8px ;
+  padding-bottom  : 4px ;
+  border-top      : 1px solid #eeeeee;
+  border-right    : 1px solid #666666;
+  border-left     : 1px solid #dddddd;
+  border-bottom   : 1px solid #333333;
+  text-decoratio n: none;
+  color           : #2f4f4f;
+}
+.menu a:hover {
+  background-color: #2f4f4f;
+  border-bottom   : 1px solid #000000;
+  color           : #ffffff;
+}
+
+-->
+</style>
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+<script type="text/javascript">
+<!--
+
+  //回呼函式 ( 收訊時執行 )
+  function on_loaded1(oj)
+  {
+    // 取得回應
+    var res  =  decodeURIComponent(oj.responseText)
+    // 淡入
+    fadeOpacity('menuA',1,0.7)
+    // 將回應的字串輸出到DIV
+    document.getElementById("menuA").innerHTML=res
+  }
+
+  // 收發訊函式
+  function loadMenu(num,margin)
+  {
+    sendRequest(
+        on_loaded1,         //回呼函式
+        '', 'POST',         //資料與 HTTP 方式
+        './menu'+num+'.htm', //URL
+         true,true          //非同步 強制載入
+    ) 
+    // 移動選單位置
+    document.getElementById("menuA").style.top="20px"
+    document.getElementById("menuA").style.left=margin +"px"
+  }
+
+  document.onclick=function(){
+    //淡出
+    fadeOpacity('menuA',0,0)
+  }
+
+  // 跨瀏覽器不透明度設定函式
+  function setOpacity(layName,arg) {
+    var ua = navigator.userAgent,oj = document.getElementById(layName)
+    if(window.opera){//o9bpr2+
+       if((typeof oj.style.opacity)=='string') oj.style.opacity = arg
+       else return
+    } else if(ua.indexOf('Safari') !=-1 || ua.indexOf('KHTML') !=-1 || 
+       (typeof oj.style.opacity)=='string') { //s,k,new m
+        oj.style.opacity = arg
+    } else if(document.all) {          //win-e4,win-e5,win-e6
+        document.all(layName).style.filter="alpha(opacity=0)"
+        document.all(layName).filters.alpha.Opacity  = (arg * 100)
+    } else if(ua.indexOf('Gecko')!=-1) //n6,n7,m1
+        oj.style.MozOpacity = arg
+  }
+  
+  // 跨瀏覽器淡出淡入函式
+  function fadeOpacity(layName,swt,stopOpacity){
+    
+    if(!window.fadeOpacity[layName]) //初始化計數器
+      fadeOpacity[layName] =0 
+    //沒有指定方式時採用的初始值(從不透明到透明)
+    if(!arguments[1]) swt = -1
+    //引數swt為 -1 表示不透明到透明
+    //           1 表示透明到不透明
+    if(swt==-1)        var f  = "9876543210"
+    else if(swt==1)    var f  = "0123456789"
+    else               var f  = "9876543210"
+    //沒有指定不透明度時採用的初期値
+    if(!arguments[2] && swt==-1)     stopOpacity = 0
+    else if(!arguments[2] && swt==1) stopOpacity = 10
+
+    //淡化效果
+    if( fadeOpacity[layName] < f.length-1 ){
+      //從字串取出計數器值所指向的字元
+      var opa = f.charAt(fadeOpacity[layName])/10
+      //若達到目標不透明度則程式結束
+      if( opa == stopOpacity ){
+        setOpacity(layName,stopOpacity)  //結束
+        fadeOpacity[layName] = 0         //清除
+        return
+      }
+      // 修改不透明度
+      setOpacity(layName,opa)
+      // 累計計數器
+      fadeOpacity[layName]++
+      // 在50/1000秒後再次執行fadeOpacity
+      setTimeout('fadeOpacity("'+layName+'","'+swt+'","'+stopOpacity+'")',50)
+    } else {
+      // 結束
+      setOpacity(layName,stopOpacity)
+      // 清除
+      fadeOpacity[layName] = 0
+    }
+  }
+
+//-->
+</script>
+
+<body>
+
+<div id="menu0">
+| <a href="javascript:void()"
+   onmouseover = "loadMenu(1,0)">讀入Menu1</a> | 
+<a href="javascript:void()"
+   onmouseover = "loadMenu(2,80)">讀入Menu2</a> | 
+</div>
+
+<!-- 輸出於此 -->
+<div id="menuA" class="menu"></div>
+
+
+</body>

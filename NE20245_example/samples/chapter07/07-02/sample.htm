@@ -1,0 +1,92 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>XML</title>
+
+<!-- 載入JKL.ParseXML -->
+<script type="text/javascript" src="./jkl-parsexml.js"></script>
+
+<body>
+<button onclick="rssOut()">
+MovableType 的 atom.xml
+</button>
+<br>
+<script>
+<!--
+
+  //進度桿
+  var bar
+  //預載的資料
+  var data =""
+  
+  //輸出用DIV
+  document.write('<div id="out4" style ="font-size:0.8em;margin:12px;"></div>')
+  
+  //預載
+  rssPreLoader('http://jsgt.org/mt/01/atom.xml')
+  function rssPreLoader(url)
+  {
+  
+    //顯示進度桿
+    document.getElementById('out4').innerHTML = 'pre loading...'
+    bar = setInterval('progressbar()', 100 )
+  
+    // 建立JKL.ParseXML物件
+    var xml = new JKL.ParseXML( url );  
+    var func = function ( data )        // 定義呼叫對象函式
+    {  
+      onLoadedRSS( data );              // 回呼
+    }
+    xml.async( func );                  // 指定呼叫對象函式
+    xml.parse();                        // 下載～解析～呼叫函式
+  
+  }
+  
+  // 收到RSS資料後所啟動的回呼函式
+  function onLoadedRSS(xml)
+  {
+    data =""
+    
+    //依序處理feed元素以下的entry元素
+    for(i in xml.feed.entry)
+    {
+      //只顯示類型為"生活"的項目
+      if(xml.feed.entry[i]["dc:subject"]=="生活")
+      {
+        //建立輸出用的HTML
+        data += '<a href="'+xml.feed.entry[i].link.href+'">'
+  
+        //限制長度為24個字
+        data += xml.feed.entry[i].title.substr(0,24)
+        data += '</a>'
+        data += '<br>'
+  
+        //取得時間
+        var time = xml.feed.entry[i].issued
+          time = time.split("T").join(" ").split("+")[0]
+        data += '('+time+')<br>'
+      }
+    }
+    //停止進度桿
+    clearInterval(bar)
+    document.getElementById('out4').innerHTML = 'ok now loaded.'
+  
+    return data
+  }
+  
+  //輸出
+  function rssOut()
+  {
+    //輸出
+    document.getElementById('out4').innerHTML = data
+  }
+  
+  //進度桿
+  function progressbar()
+  {
+    document.getElementById('out4').innerHTML += '|'
+  }
+  
+//-->
+</script>
+</body>
+</html>
+

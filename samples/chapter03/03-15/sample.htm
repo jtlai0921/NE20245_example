@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <head><title>Ajax</title>
+    <!-- 下面的 API Key 請務必改成自己從 http://www.google.com/apis/maps/ 取得的值 -->
+    <script src="http://maps.google.com/maps?file=api&v=1&key=ABQ****(請換成自己的API Key)****DMdcg" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="map" style="width: 500px; height: 400px"></div>
+    <script type="text/javascript">
+    //<![CDATA[
+
+    // 初始座標設定
+    var inipoint = new GPoint(139.76450443267822,35.63619741482794);
+
+    var map = new GMap(document.getElementById("map"));
+    map.centerAndZoom(inipoint , 2);
+    map.addControl(new GSmallMapControl());
+    map.addControl(new GMapTypeControl());
+
+    // 建立十字圖示
+    var icon = new GIcon();
+    icon.image = "./cross.png";
+    icon.iconSize = new GSize(100, 100);
+    icon.iconAnchor = new GPoint(50, 50);
+    var marker = new GMarker(map.getCenterLatLng(), icon);
+    map.addOverlay(marker);
+    
+    // 新增事件
+    GEvent.addListener(map, "move", function() { 
+       // 刪除現有位置的圖層
+       map.removeOverlay(marker) 
+       // 在新位置建立的圖示駐標
+       marker = new GMarker(map.getCenterLatLng(), icon);
+       // 加入新的圖層
+       map.addOverlay(marker);
+    });
+    
+	
+    //]]>
+    </script>
+  </body>
+</html>

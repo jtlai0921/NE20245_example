@@ -1,0 +1,59 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- Ajax簡易程式庫 jslb_ajax.js -->
+<script type="text/javascript"
+        src      = "../../lib/jslb_ajax.js"
+        charset  = "utf-8"></script>
+
+<script type="text/javascript">
+<!--
+  //回呼函式 (收到訊息時會被呼叫)
+  function on_loaded1(oj)
+  {
+    //取得回應
+    var res  =  decodeURIComponent(oj.responseText)
+    //將資料JSON化
+    eval('var ary='+res) 
+    //將回應的text,value陣列輸出到OPTION
+    var oj = document.form0.sel0    
+    delOptions(oj)
+    addOptions(oj,ary)
+  }
+  //新增option
+  function addOptions(oj,ary){
+      for ( i=0 ; i <  ary.length  ; i++ ){
+        oj.options[i]=new Option(ary[i][0],ary[i][1])
+    }
+  }
+  //刪除option
+  function delOptions(oj){
+    var optionIndex = oj.options.length  
+      for ( i=0 ; i <= optionIndex ; i++ ){
+        oj.options[0]=null
+    }
+  }
+  //收發訊函式
+  function getOpetionData(oj)
+  {
+      sendRequest(
+        on_loaded1,         //回呼函式
+        '&data='+oj.value,  //資料 
+        'POST','./ary.php',true,true//HTTP方式等
+      ) 
+  }
+//-->
+</script>
+
+<body>
+從伺服器取得勾選之編號所對應的資料，追加為OPTION的值
+<form name="form0" onsubmit="return false">
+  <input type="radio" name="sel" value="1" 
+         onclick="getOpetionData(this)"> 1 水果<br>
+  <input type="radio" name="sel" value="2" 
+         onclick="getOpetionData(this)"> 2 蔬菜<br>
+  <select name="sel0" size="4" 
+          onclick="alert('值為　'+this.options[this.selectedIndex].value)"> 
+  </select> 
+</form>
+
+</body>
